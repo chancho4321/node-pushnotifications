@@ -7,5 +7,4 @@ tmp
 test/logs
 coverage
 .sonar
-lib
 release.sh
