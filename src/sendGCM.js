@@ -48,7 +48,7 @@ module.exports = (regIds, data, settings) => {
     delete opts.id;
     const GCMSender = new gcm.Sender(id, opts);
     const promises = [];
-    
+
     const message = new gcm.Message({ // See https://developers.google.com/cloud-messaging/http-server-ref#table5
         collapseKey: data.collapseKey,
         priority: data.priority,
