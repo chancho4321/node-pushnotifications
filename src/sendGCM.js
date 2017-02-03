@@ -48,25 +48,7 @@ module.exports = (regIds, data, settings) => {
     delete opts.id;
     const GCMSender = new gcm.Sender(id, opts);
     const promises = [];
-    let custom = typeof data.custom === 'string' ? { message: data.custom } : {};
-    if (typeof data.custom === 'string') {
-        custom = {
-            message: data.custom,
-        };
-    } else if (typeof data.custom === 'object') {
-        custom = Object.assign({}, data.custom);
-    } else {
-        custom = {
-            data: data.custom,
-        };
-    }
-
-    custom.title = custom.title || data.title || '';
-    custom.message = custom.message || data.body || '';
-    custom.sound = custom.sound || data.sound || undefined;
-    custom.icon = custom.icon || data.icon || undefined;
-    custom.msgcnt = custom.msgcnt || data.badge || undefined;
-
+    
     const message = new gcm.Message({ // See https://developers.google.com/cloud-messaging/http-server-ref#table5
         collapseKey: data.collapseKey,
         priority: data.priority,
@@ -75,15 +57,15 @@ module.exports = (regIds, data, settings) => {
         timeToLive: data.expiry - Math.floor(Date.now() / 1000) || data.timeToLive || 28 * 86400,
         restrictedPackageName: data.restrictedPackageName,
         dryRun: data.dryRun || false,
-        data: custom,
-        notification: {
+        data: {
             title: data.title, // Android, iOS (Watch)
-            body: data.body, // Android, iOS
+            message: data.body, // Android, iOS
             icon: data.icon, // Android
             sound: data.sound, // Android, iOS
             badge: data.badge, // iOS
             tag: data.tag, // Android
             color: data.color, // Android
+            custom: data.custom, // Phonegap plugin push compatibility
             click_action: data.clickAction || data.category, // Android, iOS
             body_loc_key: data.locKey, // Android, iOS
             body_loc_args: data.locArgs, // Android, iOS
